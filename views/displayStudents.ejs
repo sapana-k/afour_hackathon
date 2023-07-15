@@ -2,9 +2,8 @@
 <html>
 
 <head>
-	<title>Books Display</title>
+	<title>Students Display</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 </head>
 
 <style>
@@ -13,16 +12,6 @@
         border-collapse: collapse;
         width: 100%;
     }
-	.buttons{
-		border: none;
-		color: white;
-		padding: 5px 18px;
-		text-align: left;
-		text-decoration: none;
-		display: inline-block;
-		font-size: 15px;
-	}
-	
 	.btn {
 		background-color: DodgerBlue; /* Blue background */
 		border: none; /* Remove borders */
@@ -37,6 +26,15 @@
 		background-color: RoyalBlue;
 	  }
 
+	.buttons{
+		border: none;
+		color: white;
+		padding: 5px 18px;
+		text-align: left;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 15px;
+	}
 	td{
 		padding: 6px;
 		border: 1px solid black;
@@ -57,50 +55,50 @@
 	<form action="/" method="get">
 	<button class="btn"><i class="fa fa-home"></i> Home</button>
 	</form>
-	<form action="/students" method="get">
-        <button type="submit", class="buttons", style="background-color: #e8bd11">Students</button>
+	<form action="/books" method="get">
+        <button type="submit", class="buttons", style="background-color: #e8bd11">Books</button>
     </form>
-	<h1>Add Books</h1>
-	<form action="/addBook" method="post">
-		<input type="text" placeholder="Book Code" 
-			   name="bookCode">
-		<input type="text" placeholder="Book Name" 
-			   name="bookTitle">
-		<input type="text" placeholder="Book Author" 
-			   name="bookAuthor">
-		<input type="text" placeholder="Book Description" 
-			   name="bookDesc">
+	<h1>Add Students</h1>
+	<form action="/addStudent" method="post">
+		<input type="text" placeholder="ID" 
+			   name="studentID">
+		<input type="text" placeholder="Name" 
+			   name="studentName">
+		<input type="text" placeholder="Email" 
+			   name="studentEmail">
+		<input type="text" placeholder="PhoneNo." 
+			   name="studentPhone">
 		<button type="submit", class="buttons", style="background-color: #4CAF50">Add</button>
 	</form>
 	<br>
-	<h1>All Books</h1>
+	<h1>All Students</h1>
 
 	<table>
 		<tr>
-            <th>Book Code</th>
-			<th>Book Name</th>
-			<th>Book Author</th>
-			<th>Book Description</th>
+            <th>ID</th>
+			<th>Name</th>
+			<th>E-mail ID</th>
+			<th>Phone no.</th>
 		</tr>
 		<% data.forEach(element=> { %>
 			<tr>
 				<td>
-					<%= element.bookCode %>
+					<%= element.studentID %>
 				</td>
                 <td>
-					<%= element.bookTitle %>
+					<%= element.studentName %>
 				</td>
 				<td>
-					<%= element.bookAuthor %>
+					<%= element.studentEmail %>
 				</td>
 				
 				<td>
-					<%= element.bookDesc %>
+					<%= element.studentPhone %>
 				</td>
 				<td id="buttoncol" width="236px">
-					<form action="/deleteBook" method="post">
+					<form action="/deleteStudent" method="post">
 						<input type="text" style="display: none;" 
-								name="bookCode" value="<%= element.bookCode %>">
+								name="studentID" value="<%= element.studentID %>">
 						<button type="submit", class="buttons", style="background-color: #e84011">Delete</button>
 				    </form>
 					<!-- <button  class="buttons", style="background-color: #008CBA">Update</button> -->
