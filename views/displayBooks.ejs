@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>bookDisplay</title>
+</head>
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+	.buttons{
+		border: none;
+		color: white;
+		padding: 5px 18px;
+		text-align: left;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 15px;
+	}
+	td{
+		padding: 6px;
+		border: 1px solid black;
+	}
+	#buttoncol{
+		border: 1px solid white;
+	}
+    th {
+        border: 1px solid black;
+        text-align: left;
+        padding: 6px;
+    }
+	tr{
+		border: 1px solid white;
+	}
+</style>
+<body>
+	<h1>Add Books</h1>
+	<form action="/add" method="post">
+		<input type="text" placeholder="Book Code" 
+			   name="bookCode">
+		<input type="text" placeholder="Book Name" 
+			   name="bookTitle">
+		<input type="text" placeholder="Book Author" 
+			   name="bookAuthor">
+		<input type="text" placeholder="Book Description" 
+			   name="bookDesc">
+		<button type="submit", class="buttons", style="background-color: #4CAF50">Add</button>
+	</form>
+	<br>
+	<h1>All Books</h1>
+
+	<table>
+		<tr>
+            <th>Book Code</th>
+			<th>Book Name</th>
+			<th>Book Author</th>
+			<th>Book Description</th>
+		</tr>
+		<% data.forEach(element=> { %>
+			<tr>
+				<td>
+					<%= element.bookCode %>
+				</td>
+                <td>
+					<%= element.bookTitle %>
+				</td>
+				<td>
+					<%= element.bookAuthor %>
+				</td>
+				
+				<td>
+					<%= element.bookDesc %>
+				</td>
+				<td id="buttoncol" width="236px">
+					<form action="/delete" method="post">
+						<input type="text" style="display: none;" 
+								name="bookTitle" value="<%= element.bookTitle %>">
+						<button type="submit", class="buttons", style="background-color: #e84011">Delete</button>
+				    </form>
+					<!-- <button  class="buttons", style="background-color: #008CBA">Update</button> -->
+				</td>
+				
+			</tr>
+			<% }) %>
+
+	</table>
+
+</body>
+
+</html>
