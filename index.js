@@ -1,8 +1,6 @@
 const express = require('express');
-const {MongoClient} = require('mongodb');
-const mongoose = require("mongoose");
 const bodyParser = require('body-parser'); //To receive input values of a form
-const bookModel = require("./models/book");
+const BookModel = require("./models/bookModel.js");
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -11,24 +9,6 @@ app.listen(8000, ()=>{
     console.log("Connected - app running at port 8000")
 })
 
-app.get("/hey",(req,res)=> {
-    res.render("home", { variableName: "Hello!" })
-})
-
-//connect to mongoDB
-mongoose.connect(
-    "mongodb+srv://afour:afour@afourhackathon.6wbfog6.mongodb.net/",
-    {
-        dbName: "LibraryManagementApp",
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
-);
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error: "));
-db.once("open", function () {
-  console.log("DB Connected successfully");
-});
 
 //we can handle form data using the request object
 app.use( bodyParser.json() );      
@@ -36,72 +16,55 @@ app.use( bodyParser.json() );
          extended: true
 }));
 
-
-//passing book array to frontend
-const books = [{
-    bookCode: 240,
-    bookTitle: "Rudest Book Ever",
-    bookAuthor: "Shwetabh Gangwar",
-    bookDesc: "rude self help book",
-},
-{
-    bookCode: 102,
-    bookTitle: "Do Epic Shit",
-    bookAuthor: "Ankur warikoo",
-    bookDesc: "self help book, time management",
-}
-]
-
-//display data
+//display books
 app.get("/", async (req, res) => {
-    res.render("displayBooks", {
-        data: books
-    })
-});
+    try {
+        BookModel.find().then((books) => {
+            console.log(books);
+            res.render("displayBooks", {
+                data: books
+            })
+        })
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
 
-// app.get("/", async (req, res) => {
-//     const books = await bookModel.find();
-//     try {
-//         res.render("displayBooks", {
-//             data: books
-//         })
-//         res.send(db.Books.find({bookTitle:"Do Epic Shit"}));
-//     } catch (error) {
-//       res.status(500).send(error);
-//     }
-//   });
-
+//add books
 app.post("/add", (req, res) => {
-    const inputBookCode = req.body.bookCode
-    const inputBookTitle = req.body.bookTitle
-    const inputBookAuthor = req.body.bookAuthor
-    const inputBookDesc = req.body.bookDesc
-    
-    books.push({
-        bookCode: inputBookCode,
-        bookTitle:inputBookTitle,
-        bookAuthor: inputBookAuthor,
-        bookDesc:inputBookDesc
+    const newBook = new BookModel({
+        bookCode: req.body.bookCode,
+        bookTitle: req.body.bookTitle,
+        bookAuthor: req.body.bookAuthor,
+        bookDesc: req.body.bookDesc,
+    });
+    newBook.save().then((book) => {
+        console.log('Book saved:', book);
     })
-    res.render("displayBooks", {
-        data: books
+    .catch((error) => {
+        console.error('Error saving book:', error);
+    });
+    BookModel.find().then((books) => {
+        res.render("displayBooks", {
+            data: books
+        })
     })
  })
 
-
+ //delete books
  app.post('/delete', (req, res) => {
-    var requestedBookTitle = req.body.bookTitle;
-    var j = 0;
-    
-    books.forEach(book => {
-        j = j + 1;
-        if (book.bookTitle == requestedBookTitle) {
-            books.splice((j - 1), 1)
-        }
+    BookModel.deleteOne({ bookCode: req.body.bookCode })
+    .then(() => {
+        console.log('Document deleted successfully');
     })
-    res.render("displayBooks", {
-        data: books
-    })
+    .catch((error) => {
+        console.error('Error deleting document:', error);
+    });
+    BookModel.find().then((books) => {
+        res.render("displayBooks", {
+            data: books
+        })
+    });
  })
 
 
